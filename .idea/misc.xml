@@ -3,11 +3,20 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/FASK/app/src/main/res/drawable/dp30_lightgray_bg.xml" value="0.23854166666666668" />
+        <entry key="..\:/FASK/app/src/main/res/drawable/half_rounded_bg.xml" value="0.23854166666666668" />
+        <entry key="..\:/FASK/app/src/main/res/layout/activity_cart.xml" value="0.2" />
+        <entry key="..\:/FASK/app/src/main/res/layout/activity_category_details.xml" value="0.21822916666666667" />
         <entry key="..\:/FASK/app/src/main/res/layout/activity_log_in.xml" value="0.1675925925925926" />
         <entry key="..\:/FASK/app/src/main/res/layout/activity_main.xml" value="0.2" />
+        <entry key="..\:/FASK/app/src/main/res/layout/activity_product_details.xml" value="0.21822916666666667" />
         <entry key="..\:/FASK/app/src/main/res/layout/activity_sign_up.xml" value="0.1675925925925926" />
-        <entry key="..\:/FASK/app/src/main/res/layout/fragment_home.xml" value="0.264" />
+        <entry key="..\:/FASK/app/src/main/res/layout/activity_splash_screen.xml" value="0.21822916666666667" />
+        <entry key="..\:/FASK/app/src/main/res/layout/cart_tile.xml" value="0.264" />
+        <entry key="..\:/FASK/app/src/main/res/layout/categories_tiles.xml" value="0.4" />
+        <entry key="..\:/FASK/app/src/main/res/layout/fragment_home.xml" value="0.152" />
         <entry key="..\:/FASK/app/src/main/res/layout/fragment_profile.xml" value="0.21822916666666667" />
+        <entry key="..\:/FASK/app/src/main/res/layout/product_tiles.xml" value="0.264" />
         <entry key="..\:/FASK/app/src/main/res/menu/bottom_navigation_menu.xml" value="0.21822916666666667" />
       </map>
     </option>
