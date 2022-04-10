@@ -28,7 +28,6 @@ public class CategoryDetails extends AppCompatActivity {
     private CategoriesDetailAdapter adapter;
     private String category;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

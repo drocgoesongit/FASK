@@ -10,7 +10,20 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.FASK">
         <activity
-            android:name=".SplashScreen">
+            android:name=".CompleteOrder"
+            android:exported="false" />
+        <activity
+            android:name=".Checkout"
+            android:exported="false"
+            android:parentActivityName=".SelectAddress" />
+        <activity
+            android:name=".AddAddress"
+            android:exported="false" />
+        <activity
+            android:name=".SelectAddress"
+            android:exported="false"
+            android:parentActivityName=".Cart" />
+        <activity android:name=".SplashScreen">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -25,7 +38,8 @@
             android:exported="false" />
         <activity
             android:name=".Cart"
-            android:exported="false" />
+            android:exported="false"
+            android:parentActivityName=".MainActivity" />
         <activity
             android:name=".LogIn"
             android:exported="false" />
@@ -34,9 +48,7 @@
             android:exported="false" />
         <activity
             android:name=".MainActivity"
-            android:exported="true"/>
-
-
+            android:exported="true" />
     </application>
 
 </manifest>

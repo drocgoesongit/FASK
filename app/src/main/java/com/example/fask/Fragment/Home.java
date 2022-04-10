@@ -1,5 +1,6 @@
 package com.example.fask.Fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -13,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.fask.Adapters.CategoriesSmallAdapter;
+import com.example.fask.Cart;
 import com.example.fask.Models.Banner;
 import com.example.fask.Models.Categories;
 import com.example.fask.R;
@@ -57,6 +59,14 @@ public class Home extends Fragment {
         setCarousel();
         settingCategories();
         settingHotPicks();
+
+        binding.cartButtonHome.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getContext(), Cart.class);
+                startActivity(intent);
+            }
+        });
 
         return binding.getRoot();
     }
