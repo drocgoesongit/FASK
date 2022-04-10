@@ -29,7 +29,7 @@ class CategoriesDetailAdapter(private val context: Context, private val productL
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val product = productList[position]
-        Picasso.get().load(product.image).placeholder(R.drawable.ic_user_ecom).into(holder.image)
+        Picasso.get().load(product.image).placeholder(R.drawable.ic_food_ph).into(holder.image)
         holder.name.setText(product.name)
         holder.price.text = "₹ ${product.price}"
         holder.rating.text = product.rating.toString()

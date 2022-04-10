@@ -22,6 +22,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.Objects;
+
 
 public class Profile extends Fragment {
 private FragmentProfileBinding binding;
@@ -43,12 +45,13 @@ private GridLayoutManager glm;
         binding = FragmentProfileBinding.inflate(inflater, container, false);
 
         FirebaseDatabase.getInstance().getReference().child("Users")
-                .child(FirebaseAuth.getInstance().getUid())
+                .child(Objects.requireNonNull(FirebaseAuth.getInstance().getUid()))
                 .addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 Users user = snapshot.getValue(Users.class);
-                binding.usernameProfileElement.setText(user.getUsername().toString());
+                assert user != null;
+                binding.usernameProfileElement.setText(user.getUsername());
             }
 
             @Override

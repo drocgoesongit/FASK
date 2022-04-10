@@ -148,7 +148,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="15dp"
                     android:fontFamily="@font/exo"
-                    android:text="Men's Jerseys category"
+                    android:text="All food category"
                     android:textColor="@color/text_gray"
                     android:textSize="14sp"
                     app:layout_constraintStart_toStartOf="parent"
