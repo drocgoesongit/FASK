@@ -1,11 +1,15 @@
 package com.example.fask;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -37,6 +41,16 @@ public class Checkout extends AppCompatActivity {
     private String completeAddress;
     private final static String TAG_MAIN = "DebuggingMain";
 
+    int GOOGLE_PAY_REQUEST_CODE = 123;
+    public static final String GOOGLE_PAY_PACKAGE_NAME = "com.google.android.apps.nbu.paisa.user";
+    // payment code
+    String amount;
+    String name = "Mansoori Khalid";
+    String upiId = "mansoorikhalid033@okaxis";
+    String transactionNote = "Test payment";
+    String status;
+    Uri uri;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,31 +79,8 @@ public class Checkout extends AppCompatActivity {
         binding.placeOrderButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String id = String.valueOf(System.currentTimeMillis());
-                DifferentOrderForCheckout order = new DifferentOrderForCheckout(completeAddress, productList, String.valueOf(cartTotal), "placed", FirebaseAuth.getInstance().getUid(), id);
-                FirebaseDatabase.getInstance().getReference()
-                        .child("UserOrders")
-                        .child(Objects.requireNonNull(FirebaseAuth.getInstance().getUid()))
-                        .child(id)
-                        .setValue(order).addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void unused) {
-                        Log.w(TAG_MAIN, "Order added to database.");
-                        FirebaseDatabase.getInstance().getReference()
-                                .child("Orders")
-                                .child(FirebaseAuth.getInstance().getUid())
-                                .removeValue().
-                                addOnSuccessListener(new OnSuccessListener<Void>() {
-                                    @Override
-                                    public void onSuccess(Void unused) {
-                                        Log.w(TAG_MAIN, "Cart emptied.");
-                                        Toast.makeText(Checkout.this, "Order Placed.", Toast.LENGTH_SHORT).show();
-                                        Intent intent = new Intent(Checkout.this, CompleteOrder.class);
-                                        startActivity(intent);
-                                    }
-                                });
-                    }
-                });
+                uri = getUpiPaymentUri(name, upiId, transactionNote, amount);
+                payWithGpay();
             }
         });
 
@@ -110,6 +101,7 @@ public class Checkout extends AppCompatActivity {
                 // Setting total prices.
                 binding.subTotalNumber.setText(String.valueOf("₹ " + cartTotal));
                 binding.totalNumber.setText(String.valueOf("₹ " + cartTotal));
+                amount = String.valueOf(cartTotal);
                 // Setting up recyclerView
                 adapter = new CheckoutAdapter(Checkout.this, productList);
                 binding.allItemRecyclerView.setAdapter(adapter);
@@ -147,4 +139,83 @@ public class Checkout extends AppCompatActivity {
             }
         });
     }
+
+    public void completeOrder(){
+        String id = String.valueOf(System.currentTimeMillis());
+        DifferentOrderForCheckout order = new DifferentOrderForCheckout(completeAddress, productList, String.valueOf(cartTotal), "placed", FirebaseAuth.getInstance().getUid(), id);
+        FirebaseDatabase.getInstance().getReference()
+                .child("UserOrders")
+                .child(Objects.requireNonNull(FirebaseAuth.getInstance().getUid()))
+                .child(id)
+                .setValue(order).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void unused) {
+                Log.w(TAG_MAIN, "Order added to database.");
+                FirebaseDatabase.getInstance().getReference()
+                        .child("Orders")
+                        .child(FirebaseAuth.getInstance().getUid())
+                        .removeValue().
+                        addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void unused) {
+                                Log.w(TAG_MAIN, "Cart emptied.");
+                                Toast.makeText(Checkout.this, "Order Placed.", Toast.LENGTH_SHORT).show();
+                                Intent intent = new Intent(Checkout.this, CompleteOrder.class);
+                                startActivity(intent);
+                            }
+                        });
+            }
+        });
+    }
+    //  <- payment code starts ->
+    private void payWithGpay() {
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        intent.setData(uri);
+        intent.setPackage(GOOGLE_PAY_PACKAGE_NAME);
+        startActivityForResult(intent, GOOGLE_PAY_REQUEST_CODE);
+        if(appIsInstalled(Checkout.this, GOOGLE_PAY_PACKAGE_NAME)){
+
+        } else {
+            Toast.makeText(Checkout.this, "Please Install GPay.", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if ( data != null) {
+            status = data.getStringExtra("Status").toLowerCase();
+        }
+
+        if ((RESULT_OK == requestCode) && status.equals("success")){
+            completeOrder();
+            Toast.makeText(Checkout.this, "Transaction Successful", Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(Checkout.this, "Transaction unsuccessful", Toast.LENGTH_SHORT).show();
+
+        }
+    }
+
+    private static boolean appIsInstalled(Context context, String packageName) {
+        try {
+            context.getPackageManager().getApplicationInfo(packageName, 0);
+            return true;
+        } catch (PackageManager.NameNotFoundException exception) {
+            return false;
+        }
+    }
+
+    private static Uri getUpiPaymentUri(String name, String upiId, String transactionNote, String amount) {
+        return new Uri.Builder()
+                .scheme("upi")
+                .authority("pay")
+                .appendQueryParameter("pa", upiId)
+                .appendQueryParameter("pn", name)
+                .appendQueryParameter("tn", transactionNote)
+                .appendQueryParameter("am", amount)
+                .appendQueryParameter("cu", "INR")
+                .build();
+    }
+    // Payment code ends.
+
 }
